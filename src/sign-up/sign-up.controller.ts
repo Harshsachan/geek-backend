@@ -1,34 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { SignUpService } from './sign-up.service';
 import { CreateSignUpDto } from './dto/create-sign-up.dto';
-import { UpdateSignUpDto } from './dto/update-sign-up.dto';
+import { SignUpEntity } from './entities/sign-up.entity';
 
-@Controller('sign-up')
+@Controller('signUp')
 export class SignUpController {
   constructor(private readonly signUpService: SignUpService) {}
 
-  @Post()
-  create(@Body() createSignUpDto: CreateSignUpDto) {
-    return this.signUpService.create(createSignUpDto);
+  @HttpCode(HttpStatus.OK)
+  @Post('signUp')
+  async signup(@Body() createSignUpDto: CreateSignUpDto) {
+    // Implement your signup logic here
+    return await this.signUpService.createUser(createSignUpDto);
   }
 
-  @Get()
-  findAll() {
-    return this.signUpService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.signUpService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSignUpDto: UpdateSignUpDto) {
-    return this.signUpService.update(+id, updateSignUpDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.signUpService.remove(+id);
-  }
+  @HttpCode(HttpStatus.OK)
+  @Get('logIn')
+  async findOne(@Body() { email, password }: Pick<CreateSignUpDto, 'email' | 'password'>):Promise<SignUpEntity|undefined>
+    {
+      const createSignUpDto: CreateSignUpDto = { email, password, name: 'DefaultName' };
+        return this.signUpService.signIn(createSignUpDto);
+    }
 }
