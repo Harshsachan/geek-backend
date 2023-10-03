@@ -15,7 +15,7 @@ export class SignUpController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Get('logIn')
+  @Post('logIn')
   async findOne(@Body() { email, password }: Pick<CreateSignUpDto, 'email' | 'password'>):Promise<SignUpEntity|undefined>
     {
       const createSignUpDto: CreateSignUpDto = { email, password, name: 'DefaultName' };
